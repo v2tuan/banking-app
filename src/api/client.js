@@ -1,37 +1,41 @@
-import axios from 'axios';
+import axios from "axios"
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1',
+  // baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1',
+  baseURL:
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://695535891cd5294d2c7eab0f.mockapi.io/api/v1",
+
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-});
+})
 
 // Request interceptor - Add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token")
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`
     }
-    return config;
+    return config
   },
   (error) => Promise.reject(error)
-);
+)
 
 // Response interceptor - Handle errors globally
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      window.location.href = '/login';
+      localStorage.removeItem("access_token")
+      window.location.href = "/login"
     }
-    
-    const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra';
-    return Promise.reject(new Error(errorMessage));
-  }
-);
 
-export default apiClient;
+    const errorMessage = error.response?.data?.message || "Có lỗi xảy ra"
+    return Promise.reject(new Error(errorMessage))
+  }
+)
+
+export default apiClient
