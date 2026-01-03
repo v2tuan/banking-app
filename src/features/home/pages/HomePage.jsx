@@ -1,7 +1,10 @@
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, Wallet, CreditCard, ArrowUpRight } from 'lucide-react';
+import TransactionList from '../components/TransactionList';
 import { useTransactionHistory } from '@/hooks/useTransactionHistory';
+
+
 
 const HomePage = () => {
   const user = useAuthStore((state) => state.user);
@@ -74,43 +77,13 @@ const HomePage = () => {
         </CardHeader>
 
         <CardContent>
-          {loading ? (
-            <p>Đang tải...</p>
-          ) : transactions.length === 0 ? (
-            <p className="text-muted-foreground">Chưa có giao dịch</p>
-          ) : (
-            <div className="space-y-4">
-              {transactions.map((tx) => {
-                const isIncome = tx.type === 'DEPOSIT';
-
-                return (
-                  <div
-                    key={tx.transactionId}
-                    className="flex items-center justify-between border-b pb-4 last:border-0"
-                  >
-                    <div>
-                      <p className="font-medium">
-                        {tx.type === 'TRANSFER' ? 'Chuyển khoản' : tx.type}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(tx.createdAt).toLocaleDateString('vi-VN')}
-                      </p>
-                    </div>
-
-                    <p
-                      className={`font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'
-                        }`}
-                    >
-                      {isIncome ? '+' : '-'}
-                      {tx.amount.toLocaleString('vi-VN')} ₫
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <TransactionList
+            transactions={transactions}
+            loading={loading}
+          />
         </CardContent>
       </Card>
+
 
     </div>
   );

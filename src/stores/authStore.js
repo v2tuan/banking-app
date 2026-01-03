@@ -13,13 +13,19 @@ export const useAuthStore = create(
       login: async (credentials) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await authAPI.login(credentials);
-          localStorage.setItem('access_token', data.access_token);
-          set({ 
-            user: data.user, 
-            isAuthenticated: true, 
-            isLoading: false 
+          const res = await authAPI.login(credentials);
+
+          // 🔥 SỬA CHỖ NÀY
+          const token = res.data.access_token;
+
+          localStorage.setItem('access_token', token);
+
+          set({
+            user: null,          // backend chưa trả user
+            isAuthenticated: true,
+            isLoading: false
           });
+
           return { success: true };
         } catch (error) {
           set({ error: error.message, isLoading: false });
@@ -27,15 +33,16 @@ export const useAuthStore = create(
         }
       },
 
+
       register: async (userData) => {
         set({ isLoading: true, error: null });
         try {
           const data = await authAPI.register(userData);
           localStorage.setItem('access_token', data.access_token);
-          set({ 
-            user: data.user, 
-            isAuthenticated: true, 
-            isLoading: false 
+          set({
+            user: data.user,
+            isAuthenticated: true,
+            isLoading: false
           });
           return { success: true };
         } catch (error) {
@@ -53,9 +60,9 @@ export const useAuthStore = create(
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ 
-        user: state.user, 
-        isAuthenticated: state.isAuthenticated 
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated
       }),
     }
   )
