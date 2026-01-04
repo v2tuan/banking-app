@@ -8,6 +8,7 @@ import RootLayout from '@/components/layouts/RootLayout';
 // Pages
 import HomePage from '@/features/home/pages/HomePage';
 import LoginPage from '@/features/auth/pages/LoginPage';
+import TransactionDashboard from '@/features/transaction/pages/TransactionPage';
 // import RegisterPage from '@/features/auth/pages/RegisterPage';
 
 // Protected Route Component
@@ -62,6 +63,16 @@ export const router = createBrowserRouter([
     //   },
     ],
   },
+  {
+    path: 'admin',
+    element: <Outlet />,
+    children: [
+      {
+        path: 'transactions',
+        element: <TransactionDashboard />,
+      },
+    ],
+  }
 ]);
 
 export default router;
