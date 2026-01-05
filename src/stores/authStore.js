@@ -14,14 +14,13 @@ export const useAuthStore = create(
         set({ isLoading: true, error: null });
         try {
           const res = await authAPI.login(credentials);
-
-          // 🔥 SỬA CHỖ NÀY
           const token = res.data.access_token;
+          const user = res.data.user;
 
           localStorage.setItem('access_token', token);
 
           set({
-            user: null,          // backend chưa trả user
+            user: user,
             isAuthenticated: true,
             isLoading: false
           });
@@ -38,13 +37,13 @@ register: async (userData) => {
   set({ isLoading: true, error: null });
   try {
     const res = await authAPI.register(userData);
-
     const token = res.data.access_token;
+    const user = res.data.user;
 
     localStorage.setItem('access_token', token);
 
     set({
-      user: null,
+      user: user,
       isAuthenticated: true,
       isLoading: false
     });
