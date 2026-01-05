@@ -6,7 +6,7 @@ export const getMyTransactionHistory = () => {
 
 export const transactionApi = {
     getTransactions: (filter) => {
-        return apiClient.get("/admin/transactions", { params: filter } );
+        return apiClient.get("/admin/transactions", { params: filter });
     },
 
     getTransactionById: (id) => {
@@ -17,3 +17,11 @@ export const transactionApi = {
         return apiClient.get("/admin/transactions/statistics")
     }
 }
+export const deposit = (amount) => {
+    return apiClient.post('/transactions/deposit', { amount });
+};
+
+export const withdraw = (amount) => {
+    return apiClient.post('/transactions/withdraw', { amount });
+};
+
