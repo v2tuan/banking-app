@@ -6,7 +6,7 @@ export const getMyTransactionHistory = () => {
 
 export const transactionApi = {
     getTransactions: (filter) => {
-        return apiClient.get("/admin/transactions", filter)
+        return apiClient.get("/admin/transactions", { params: filter } );
     },
 
     getTransactionById: (id) => {
