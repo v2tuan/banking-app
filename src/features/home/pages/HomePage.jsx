@@ -6,6 +6,7 @@ import { useTransactionHistory } from '@/hooks/useTransactionHistory';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import TransactionActionDialog from '../components/TransactionActionDialog';
+import { useAccountBalance } from '@/hooks/useAccountBalance';
 
 
 const HomePage = () => {
@@ -15,14 +16,14 @@ const HomePage = () => {
   // ✅ ĐẶT Ở ĐÂY
   const [openDeposit, setOpenDeposit] = useState(false);
   const [openWithdraw, setOpenWithdraw] = useState(false);
+  const { formattedBalance, loading: balanceLoading } = useAccountBalance();
 
   const stats = [
     {
       title: 'Tổng số dư',
-      value: '125,430,000 ₫',
-      icon: Wallet,
-      trend: '+12.5%',
-      trendUp: true,
+    value: balanceLoading ? 'Đang tải...' : formattedBalance,
+    icon: Wallet,
+    showTrend: false,
     },
     {
       title: 'Thu nhập tháng này',
@@ -30,6 +31,7 @@ const HomePage = () => {
       icon: TrendingUp,
       trend: '+8.2%',
       trendUp: true,
+      showTrend: true,
     },
     {
       title: 'Chi tiêu tháng này',
@@ -37,6 +39,7 @@ const HomePage = () => {
       icon: CreditCard,
       trend: '-3.1%',
       trendUp: false,
+      showTrend:true,
     },
   ];
 
@@ -63,18 +66,22 @@ const HomePage = () => {
               <stat.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p
-                className={`text-xs flex items-center gap-1 mt-2 ${stat.trendUp ? 'text-green-600' : 'text-red-600'
-                  }`}
-              >
-                <ArrowUpRight
-                  className={`h-3 w-3 ${!stat.trendUp && 'rotate-90'
-                    }`}
-                />
-                {stat.trend} so với tháng trước
-              </p>
-            </CardContent>
+  <div className="text-2xl font-bold">{stat.value}</div>
+
+  {stat.showTrend === true && (
+    <p
+      className={`text-xs flex items-center gap-1 mt-2 ${
+        stat.trendUp ? 'text-green-600' : 'text-red-600'
+      }`}
+    >
+      <ArrowUpRight
+        className={`h-3 w-3 ${stat.trendUp ? '' : 'rotate-90'}`}
+      />
+      {stat.trend} so với tháng trước
+    </p>
+  )}
+</CardContent>
+
           </Card>
         ))}
       </div>
