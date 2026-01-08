@@ -7,13 +7,16 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import TransactionActionDialog from '../components/TransactionActionDialog';
 import { useAccountBalance } from '@/hooks/useAccountBalance';
+import TransferDialog from '../components/TransferDialog';
+import { ArrowLeftRight } from 'lucide-react';
+
 
 
 const HomePage = () => {
   const user = useAuthStore((state) => state.user);
-  const { transactions, loading } = useTransactionHistory();
+  const { transactions, loading , refetch} = useTransactionHistory();
+  const [openTransfer, setOpenTransfer] = useState(false);
 
-  // ✅ ĐẶT Ở ĐÂY
   const [openDeposit, setOpenDeposit] = useState(false);
   const [openWithdraw, setOpenWithdraw] = useState(false);
   const { formattedBalance, loading: balanceLoading } = useAccountBalance();
@@ -48,7 +51,7 @@ const HomePage = () => {
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold">
-          Xin chào, {user?.name || 'User'}!
+          Xin chào, {user?.name || 'Bạn'}!
         </h1>
         <p className="text-muted-foreground mt-2">
           Đây là tổng quan tài chính của bạn
@@ -88,7 +91,7 @@ const HomePage = () => {
 
       {/* ACTION BUTTONS */}
       {/* ACTION CARDS: NẠP / RÚT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         {/* NẠP TIỀN */}
         <Card
@@ -110,6 +113,26 @@ const HomePage = () => {
             </div>
           </CardContent>
         </Card>
+{/* CHUYỂN TIỀN */}
+<Card
+  onClick={() => setOpenTransfer(true)}
+  className="cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all"
+>
+  <CardContent className="flex items-center gap-5 p-6">
+    <div className="bg-blue-100 text-blue-700 p-4 rounded-full">
+      <ArrowLeftRight className="h-7 w-7" />
+    </div>
+
+    <div>
+      <p className="text-xl font-bold text-blue-700">
+        Chuyển tiền
+      </p>
+      <p className="text-sm text-muted-foreground mt-1">
+        Chuyển khoản tới người khác
+      </p>
+    </div>
+  </CardContent>
+</Card>
 
 
         {/* RÚT TIỀN */}
@@ -159,15 +182,21 @@ const HomePage = () => {
         open={openDeposit}
         onClose={() => setOpenDeposit(false)}
         type="deposit"
-        onSuccess={() => window.location.reload()}
-      />
+        onSuccess={refetch}      />
 
       <TransactionActionDialog
         open={openWithdraw}
         onClose={() => setOpenWithdraw(false)}
         type="withdraw"
-        onSuccess={() => window.location.reload()}
+        onSuccess={refetch}
+        
       />
+      <TransferDialog
+        open={openTransfer}
+          onClose={() => setOpenTransfer(false)}
+          onSuccess={refetch} 
+/>
+
     </div>
   );
 };
