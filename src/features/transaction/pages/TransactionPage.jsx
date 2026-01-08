@@ -31,6 +31,12 @@ const TransactionDashboard = () => {
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
+  const getSignedAmount = (transaction) => {
+  return transaction.direction === 'OUT'
+    ? -transaction.amount
+    : transaction.amount;
+};
+
 
   // Fetch transactions from API
   useEffect(() => {
@@ -46,6 +52,7 @@ const TransactionDashboard = () => {
         };
         
         const response = await transactionApi.getTransactions(filter);
+        console.log('Fetched transactions:', response.data.content);
         setTransactions(response.data.content || []);
         setTotalPages(response.data.totalPages || 1);
         setTotalElements(response.data.totalElements || 0);
@@ -93,14 +100,25 @@ const TransactionDashboard = () => {
     return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
-  const getTypeIcon = (type) => {
-    switch(type) {
-      case 'TRANSFER': return <ArrowLeftRight className="w-4 h-4" />;
-      case 'DEPOSIT': return <ArrowDownRight className="w-4 h-4 text-green-600" />;
-      case 'WITHDRAW': return <ArrowUpRight className="w-4 h-4 text-red-600" />;
-      default: return null;
-    }
-  };
+  const getTypeIcon = (type, direction) => {
+  if (type === 'TRANSFER') {
+    return direction === 'OUT'
+      ? <ArrowUpRight className="w-4 h-4 text-red-600" />
+      : <ArrowDownRight className="w-4 h-4 text-green-600" />;
+  }
+
+  if (type === 'DEPOSIT') {
+    return <ArrowDownRight className="w-4 h-4 text-green-600" />;
+  }
+
+  if (type === 'WITHDRAW') {
+    return <ArrowUpRight className="w-4 h-4 text-red-600" />;
+  }
+
+  return null;
+};
+
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
@@ -330,7 +348,7 @@ const TransactionDashboard = () => {
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Loại giao dịch</p>
                                       <div className="flex items-center gap-2 mt-1">
-                                        {getTypeIcon(transaction.type)}
+                                        {getTypeIcon(transaction.type, transaction.direction)}
                                         <span className="font-medium">{transaction.type}</span>
                                       </div>
                                     </div>

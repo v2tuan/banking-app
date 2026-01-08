@@ -3,6 +3,25 @@ import apiClient from '../client';
 export const getMyTransactionHistory = () => {
     return apiClient.get('/transactions/history');
 };
+export const getTransactionTimeline = () => {
+    return apiClient.get('/transactions/timeline');
+};
+export const transfer = ({ toAccountNumber, amount, message }) => {
+  return apiClient.post('/transactions/transfer', {
+    toAccountNumber,
+    amount,
+    message,
+  });
+};
+export const validateTransferAccount = ({ toAccountNumber, amount }) => {
+  return apiClient.post('/transactions/transfer/validate', {
+    toAccountNumber,
+    amount,
+  });
+};
+
+
+
 
 export const transactionApi = {
     getTransactions: (filter) => {

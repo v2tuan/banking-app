@@ -2,12 +2,26 @@ import { ArrowDownLeft, ArrowUpRight, RefreshCcw } from 'lucide-react';
 import './transaction.css';
 
 const TransactionItem = ({ tx }) => {
-    const isIncome = tx.type === 'DEPOSIT';
+    const isIncome =
+        tx.type === 'DEPOSIT' ||
+        (tx.type === 'TRANSFER' && tx.direction === 'IN');
 
     const getIcon = () => {
-        if (tx.type === 'DEPOSIT') return <ArrowDownLeft className="tx-icon income" />;
-        if (tx.type === 'WITHDRAW') return <ArrowUpRight className="tx-icon expense" />;
-        return <RefreshCcw className="tx-icon transfer" />;
+        if (tx.type === 'DEPOSIT') {
+            return <ArrowDownLeft className="tx-icon income" />;
+        }
+
+        if (tx.type === 'WITHDRAW') {
+            return <ArrowUpRight className="tx-icon expense" />;
+        }
+
+        if (tx.type === 'TRANSFER') {
+            return tx.direction === 'IN'
+                ? <ArrowDownLeft className="tx-icon income" />
+                : <ArrowUpRight className="tx-icon expense" />;
+        }
+
+        return <RefreshCcw className="tx-icon" />;
     };
 
     const getLabel = () => {
