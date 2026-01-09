@@ -23,6 +23,7 @@ export function RegisterForm({
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   })
@@ -40,6 +41,12 @@ export function RegisterForm({
       errors.email = 'Email không được để trống'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = 'Email không hợp lệ'
+    }
+
+    if (!formData.phone) {
+      errors.phone = 'Số điện thoại không được để trống'
+    } else if (!/^0\d{9}$/.test(formData.phone)) {
+      errors.phone = 'Số điện thoại không hợp lệ'
     }
 
     if (!formData.password) {
@@ -124,6 +131,22 @@ export function RegisterForm({
               </Field>
 
               <Field>
+                <FieldLabel htmlFor="phone">Phone</FieldLabel>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="098xxxxxxx"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className={formErrors.phone ? 'border-red-500' : ''}
+                />
+                {formErrors.phone && (
+                  <p className="text-sm text-red-500">{formErrors.phone}</p>
+                )}
+              </Field>
+
+              <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
                   id="password"
@@ -149,7 +172,9 @@ export function RegisterForm({
                   className={formErrors.confirmPassword ? 'border-red-500' : ''}
                 />
                 {formErrors.confirmPassword && (
-                  <p className="text-sm text-red-500">{formErrors.confirmPassword}</p>
+                  <p className="text-sm text-red-500">
+                    {formErrors.confirmPassword}
+                  </p>
                 )}
               </Field>
 
