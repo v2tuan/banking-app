@@ -13,13 +13,18 @@ export const useAuthStore = create(
       login: async (credentials) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await authAPI.login(credentials);
-          localStorage.setItem('access_token', data.access_token);
-          set({ 
-            user: data.user, 
-            isAuthenticated: true, 
-            isLoading: false 
+          const res = await authAPI.login(credentials);
+          const token = res.data.access_token;
+          const user = res.data.user;
+
+          localStorage.setItem('access_token', token);
+
+          set({
+            user: user,
+            isAuthenticated: true,
+            isLoading: false
           });
+
           return { success: true };
         } catch (error) {
           set({ error: error.message, isLoading: false });
@@ -27,22 +32,31 @@ export const useAuthStore = create(
         }
       },
 
-      register: async (userData) => {
-        set({ isLoading: true, error: null });
-        try {
-          const data = await authAPI.register(userData);
-          localStorage.setItem('access_token', data.access_token);
-          set({ 
-            user: data.user, 
-            isAuthenticated: true, 
-            isLoading: false 
-          });
-          return { success: true };
-        } catch (error) {
-          set({ error: error.message, isLoading: false });
-          return { success: false, error: error.message };
-        }
-      },
+
+register: async (userData) => {
+  set({ isLoading: true, error: null });
+  try {
+    const res = await authAPI.register(userData);
+    const token = res.data.access_token;
+    const user = res.data.user;
+
+    localStorage.setItem('access_token', token);
+
+    set({
+      user: user,
+      isAuthenticated: true,
+      isLoading: false
+    });
+
+    return { success: true };
+  } catch (error) {
+    const message =
+      error.response?.data?.message || error.message;
+
+    set({ error: message, isLoading: false });
+    return { success: false, error: message };
+  }
+},
 
       logout: () => {
         localStorage.removeItem('access_token');
@@ -53,9 +67,9 @@ export const useAuthStore = create(
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ 
-        user: state.user, 
-        isAuthenticated: state.isAuthenticated 
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated
       }),
     }
   )

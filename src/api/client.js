@@ -12,6 +12,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
+    console.log('Token:', token);  // thêm dòng này để debug token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,7 +29,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('access_token');
       window.location.href = '/login';
     }
-    
+
     const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra';
     return Promise.reject(new Error(errorMessage));
   }

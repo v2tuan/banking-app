@@ -1,9 +1,15 @@
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, Wallet, CreditCard, ArrowUpRight } from 'lucide-react';
+import TransactionList from '../components/TransactionList';
+import { useTransactionHistory } from '@/hooks/useTransactionHistory';
+
+
 
 const HomePage = () => {
   const user = useAuthStore((state) => state.user);
+  const { transactions, loading } = useTransactionHistory();
+
 
   const stats = [
     {
@@ -51,12 +57,10 @@ const HomePage = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className={`text-xs flex items-center gap-1 mt-2 ${
-                stat.trendUp ? 'text-green-600' : 'text-red-600'
-              }`}>
-                <ArrowUpRight className={`h-3 w-3 ${
-                  !stat.trendUp && 'rotate-90'
-                }`} />
+              <p className={`text-xs flex items-center gap-1 mt-2 ${stat.trendUp ? 'text-green-600' : 'text-red-600'
+                }`}>
+                <ArrowUpRight className={`h-3 w-3 ${!stat.trendUp && 'rotate-90'
+                  }`} />
                 {stat.trend} so với tháng trước
               </p>
             </CardContent>
@@ -71,27 +75,16 @@ const HomePage = () => {
             Các giao dịch của bạn trong 7 ngày qua
           </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between border-b pb-4 last:border-0"
-              >
-                <div>
-                  <p className="font-medium">Chuyển khoản #{i}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date().toLocaleDateString('vi-VN')}
-                  </p>
-                </div>
-                <p className="font-semibold text-green-600">
-                  +{(i * 1500000).toLocaleString('vi-VN')} ₫
-                </p>
-              </div>
-            ))}
-          </div>
+          <TransactionList
+            transactions={transactions}
+            loading={loading}
+          />
         </CardContent>
       </Card>
+
+
     </div>
   );
 };
