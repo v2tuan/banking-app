@@ -51,7 +51,7 @@ const HomePage = () => {
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold">
-          Xin chào, {user?.name || 'Bạn'}!
+          Xin chào, {user?.fullName || 'Bạn'}!
         </h1>
         <p className="text-muted-foreground mt-2">
           Đây là tổng quan tài chính của bạn
