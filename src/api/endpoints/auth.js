@@ -6,7 +6,7 @@ export const authAPI = {
   },
 
   register: (userData) => {
-    return apiClient.post('/users/register', userData);
+    return apiClient.post('/user/register', userData);
   },
 
   logout: () => {

@@ -19,7 +19,7 @@ const RegisterPage = () => {
 
       if (result.success) {
         // đăng ký xong quay về login
-        navigate('/login')
+        navigate('/auth/login')
       } else {
         setError(result.error || 'Đăng ký thất bại. Vui lòng thử lại.')
       }
@@ -35,7 +35,7 @@ const RegisterPage = () => {
       onSubmit={handleSubmit}
       error={error}
       isSubmitting={isSubmitting}
-      onSwitch={() => navigate('/login')}
+      onSwitch={() => navigate('/auth/login')}
     />
   )
 }

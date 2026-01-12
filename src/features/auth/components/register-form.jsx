@@ -30,34 +30,35 @@ export function RegisterForm({
 
   const [formErrors, setFormErrors] = useState({})
 
+  // ===== Validate form
   const validateForm = () => {
     const errors = {}
 
-    if (!formData.name) {
+    if (!formData.name.trim()) {
       errors.name = 'Tên không được để trống'
     }
 
-    if (!formData.email) {
+    if (!formData.email.trim()) {
       errors.email = 'Email không được để trống'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formData.email.trim())) {
       errors.email = 'Email không hợp lệ'
     }
 
-    if (!formData.phone) {
+    if (!formData.phone.trim()) {
       errors.phone = 'Số điện thoại không được để trống'
-    } else if (!/^0\d{9}$/.test(formData.phone)) {
+    } else if (!/^0\d{9}$/.test(formData.phone.trim())) {
       errors.phone = 'Số điện thoại không hợp lệ'
     }
 
-    if (!formData.password) {
+    if (!formData.password.trim()) {
       errors.password = 'Mật khẩu không được để trống'
-    } else if (formData.password.length < 6) {
+    } else if (formData.password.trim().length < 6) {
       errors.password = 'Mật khẩu phải có ít nhất 6 ký tự'
     }
 
-    if (!formData.confirmPassword) {
+    if (!formData.confirmPassword.trim()) {
       errors.confirmPassword = 'Vui lòng nhập lại mật khẩu'
-    } else if (formData.password !== formData.confirmPassword) {
+    } else if (formData.password.trim() !== formData.confirmPassword.trim()) {
       errors.confirmPassword = 'Mật khẩu nhập lại không khớp'
     }
 
@@ -65,14 +66,24 @@ export function RegisterForm({
     return Object.keys(errors).length === 0
   }
 
+  // ===== Handle submit
   const handleSubmit = (e) => {
     e.preventDefault()
     if (validateForm() && onSubmit) {
       const { confirmPassword, ...data } = formData
-      onSubmit(data)
+
+      const payload = {
+        fullName: data.name.trim(), // 🔥 CHỈ SỬA DÒNG NÀY
+        email: data.email.trim(),
+        phone: data.phone.trim(),
+        password: data.password.trim(),
+      }
+
+      onSubmit(payload)
     }
   }
 
+  // ===== Handle change
   const handleChange = (e) => {
     const { id, value } = e.target
     setFormData(prev => ({ ...prev, [id]: value }))
@@ -172,9 +183,7 @@ export function RegisterForm({
                   className={formErrors.confirmPassword ? 'border-red-500' : ''}
                 />
                 {formErrors.confirmPassword && (
-                  <p className="text-sm text-red-500">
-                    {formErrors.confirmPassword}
-                  </p>
+                  <p className="text-sm text-red-500">{formErrors.confirmPassword}</p>
                 )}
               </Field>
 
