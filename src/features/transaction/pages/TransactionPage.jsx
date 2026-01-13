@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { ArrowUpRight, ArrowDownRight, ArrowLeftRight, DollarSign, TrendingUp, Filter, Download, Eye, Search } from 'lucide-react';
 import { transactionApi } from '@/api/endpoints/transactionApi';
 
+
 const TransactionDashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const [statistics, setStatistics] = useState({
@@ -36,6 +37,7 @@ const TransactionDashboard = () => {
     ? -transaction.amount
     : transaction.amount;
 };
+
 
 
   // Fetch transactions from API
@@ -92,13 +94,19 @@ const TransactionDashboard = () => {
   }, []);
 
   const getStatusBadge = (status) => {
-    const variants = {
-      SUCCESS: 'default',
-      FAILED: 'destructive',
-      PENDING: 'secondary'
-    };
-    return <Badge variant={variants[status]}>{status}</Badge>;
+  const styles = {
+    SUCCESS: "bg-green-100 text-green-700 hover:bg-green-100",
+    FAILED: "bg-red-100 text-red-700 hover:bg-red-100",
+    PENDING: "bg-gray-100 text-gray-700 hover:bg-gray-100",
   };
+
+  return (
+    <Badge className={styles[status] || styles.PENDING}>
+      {status}
+    </Badge>
+  );
+};
+
 
   const getTypeIcon = (type, direction) => {
   if (type === 'TRANSFER') {

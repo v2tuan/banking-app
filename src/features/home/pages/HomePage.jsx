@@ -19,7 +19,14 @@ const HomePage = () => {
 
   const [openDeposit, setOpenDeposit] = useState(false);
   const [openWithdraw, setOpenWithdraw] = useState(false);
-  const { formattedBalance, loading: balanceLoading } = useAccountBalance();
+  const {
+  formattedBalance,
+  loading: balanceLoading,
+  refetch: refetchBalance,
+} = useAccountBalance();
+
+  
+  
 
   const stats = [
     {
@@ -177,24 +184,35 @@ const HomePage = () => {
         </CardContent>
       </Card>
 
-      {/* ✅ DIALOGS — ĐẶT CUỐI JSX */}
+      
       <TransactionActionDialog
         open={openDeposit}
         onClose={() => setOpenDeposit(false)}
         type="deposit"
-        onSuccess={refetch}      />
+        onSuccess={() => {
+          refetch();          // refresh history
+          refetchBalance();  // ✅ refresh balance
+           }}
+             />
 
       <TransactionActionDialog
         open={openWithdraw}
         onClose={() => setOpenWithdraw(false)}
         type="withdraw"
-        onSuccess={refetch}
+       onSuccess={() => {
+          refetch();          
+          refetchBalance();  
+          }}
         
       />
       <TransferDialog
         open={openTransfer}
           onClose={() => setOpenTransfer(false)}
-          onSuccess={refetch} 
+         onSuccess={() => {
+          refetch();          
+          refetchBalance();  
+  }}
+          
 />
 
     </div>
