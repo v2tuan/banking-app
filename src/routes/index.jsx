@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/authStore';
 
 // Layouts
 import RootLayout from '@/components/layouts/RootLayout';
+import AdminLayout from '@/components/layouts/AdminLayout';
 // import AuthLayout from '@/components/layouts/AuthLayout';
 
 // Pages
@@ -10,6 +11,7 @@ import HomePage from '@/features/home/pages/HomePage';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import RegisterPage from '@/features/auth/pages/RegisterPage';
 import TransactionDashboard from '@/features/transaction/pages/TransactionPage';
+import UserManagementPage from '@/features/admin/pages/UserManagementPage';
 // import RegisterPage from '@/features/auth/pages/RegisterPage';
 
 // Protected Route Component
@@ -66,11 +68,33 @@ export const router = createBrowserRouter([
   },
   {
     path: 'admin',
-    element: <Outlet />,
+    element: <AdminLayout />,
     children: [
+      {
+        path: 'dashboard',
+        element: (
+          <div className="p-8">
+            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <p className="text-gray-500">Welcome to the admin dashboard.</p>
+          </div>
+        ),
+      },
+      {
+        path: 'users',
+        element: <UserManagementPage />,
+      },
       {
         path: 'transactions',
         element: <TransactionDashboard />,
+      },
+      {
+        path: 'settings',
+        element: (
+          <div className="p-8">
+            <h1 className="text-2xl font-bold">Settings</h1>
+            <p className="text-gray-500">Admin settings go here.</p>
+          </div>
+        ),
       },
     ],
   }
