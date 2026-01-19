@@ -19,6 +19,24 @@ export const getUsers = async (params = {}) => {
   return response;
 };
 
+export const getUserDetail = async (id) => {
+  const response = await apiClient.get(`/users/${id}`);
+  return response;
+};
+
+export const lockUser = async (id) => {
+  const response = await apiClient.put(`/users/${id}/lock`);
+  return response;
+};
+
+export const activateUser = async (id) => {
+  const response = await apiClient.put(`/users/${id}/activate`);
+  return response;
+};
+
 export default {
   getUsers,
+  getUserDetail,
+  lockUser,
+  activateUser,
 };
